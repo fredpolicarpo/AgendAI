@@ -2,7 +2,7 @@
 # Replace these values with your actual GCP project details
 
 # Required variables
-gcp_project_id = "agendai" # Replace with your actual GCP project ID
+gcp_project_id = "agendai-460118" # Replace with your actual GCP project ID
 
 # Optional variables with custom values (if defaults need to be changed)
 gcp_region = "us-central1"
