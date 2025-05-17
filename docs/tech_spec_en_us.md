@@ -172,7 +172,7 @@ The N8N AI Agent Node will be the central point for AI-driven logic. Voice input
 ---
 
 ### P1.1: Professional's Initial Availability Setup
-*(PRD Ref: [P1, Funcionalidade 1](/home/fred/personal/agendai/docs/product_spec_en_us.md#p1-funcionalidade-1))*
+*(PRD Ref: [P1, Funcionalidade 1](product_spec_en_us.md#1-initial-availability-configuration-by-the-professional))*
 
 * **N8N Workflow Design:**
     * Trigger: Telegram message.
@@ -189,7 +189,7 @@ The N8N AI Agent Node will be the central point for AI-driven logic. Voice input
 ---
 
 ### P1.2: Professional's Cancellation Policy Setup
-*(PRD Ref: [P1, Funcionalidade 2](/home/fred/personal/agendai/docs/product_spec_en_us.md#p1-funcionalidade-2))*
+*(PRD Ref: [P1, Funcionalidade 2](product_spec_en_us.md#2-cancellation-policy-configuration-by-the-professional))*
 
 * **N8N Workflow Design:** Telegram Trigger -> **N8N STT Node (if voice)** -> **N8N AI Agent Node (for P1.2)** -> Telegram Sender.
 * **N8N STT Node:** Converts voice to text.
@@ -201,7 +201,7 @@ The N8N AI Agent Node will be the central point for AI-driven logic. Voice input
 ---
 
 ### P1.3: Client's Pre-Booking Request
-*(PRD Ref: [P1, Funcionalidade 3](/home/fred/personal/agendai/docs/product_spec_en_us.md#p1-funcionalidade-3))*
+*(PRD Ref: [P1, Funcionalidade 3](product_spec_en_us.md#3-pre-appointment-request-by-client))*
 
 * **N8N Workflow Design (Multi-turn):** Each turn involving user input will pass through the STT Node if the input is voice.
     * Turn 1: Telegram Trigger -> **STT Node** -> **AI Agent Node (Step 1)** -> Telegram Sender.
@@ -212,7 +212,7 @@ The N8N AI Agent Node will be the central point for AI-driven logic. Voice input
 ---
 
 ### P1.4: Professional's Pre-Booking Management (Confirmation/Rejection)
-*(PRD Ref: [P1, Funcionalidade 4](/home/fred/personal/agendai/docs/product_spec_en_us.md#p1-funcionalidade-4))*
+*(PRD Ref: [P1, Funcionalidade 4](product_spec_en_us.md#4-notification-and-pre-appointment-management-by-the-professional))*
 
 * **N8N Workflow Design:** Telegram Trigger (command/button) -> **STT Node (if command is voice)** -> **N8N AI Agent Node (for P1.4)** -> Telegram Sender.
 * **N8N AI Agent Node (for P1.4):** Receives textual command (original or transcribed).
@@ -220,14 +220,14 @@ The N8N AI Agent Node will be the central point for AI-driven logic. Voice input
 ---
 
 ### P1.5: Update Agenda & Notify Client of Outcome
-*(PRD Ref: [P1, Funcionalidade 5](/home/fred/personal/agendai/docs/product_spec_en_us.md#p1-funcionalidade-5))*
+*(PRD Ref: [P1, Funcionalidade 5](product_spec_en_us.md#5-schedule-update-and-result-notification-to-the-client))*
 
 * No direct change, as this is triggered by P1.4's output.
 
 ---
 
 ### P1.6: Professional's Simple Agenda Query
-*(PRD Ref: [P1, Funcionalidade 6](/home/fred/personal/agendai/docs/product_spec_en_us.md#p1-funcionalidade-6))*
+*(PRD Ref: [P1, Funcionalidade 6](product_spec_en_us.md#6-simple-schedule-query-by-the-professional))*
 
 * **N8N Workflow Design:** Telegram Trigger -> **STT Node (if voice)** -> **N8N AI Agent Node (for P1.6)** -> Telegram Sender.
 * **N8N AI Agent Node (for P1.6):** Receives textual query.
@@ -268,4 +268,4 @@ The N8N AI Agent Node will be the central point for AI-driven logic. Voice input
 * All existing P1.x scenarios should be tested with both text and voice inputs (where applicable) to ensure the STT Node integrates correctly with the overall flow.
 * Other test areas remain as per version 1.7.
 
-*(Refer to [Product Specification: AgendAI v1.0](/home/fred/personal/agendai/docs/product_spec_en_us.md) for PRD references and detailed functional requirements.)*
+*(Refer to [Product Specification: AgendAI v1.0](product_spec_en_us.md) for PRD references and detailed functional requirements.)*
