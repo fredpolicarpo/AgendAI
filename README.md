@@ -26,7 +26,7 @@ Terraform is used to manage infrastructure as code (IaC) on the Google Cloud Pla
 
 We recommend following the [official Terraform installation guide from HashiCorp](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli) for the most up-to-date instructions. Below are summaries for common operating systems:
 
-* **Linux (APT-based: Debian, Ubuntu, etc.)**
+* **Linux (APT-based: Debian, Ubuntu, etc.)** *(Tested and verified)*
     1.  Ensure you have `gnupg`, `software-properties-common`, and `curl` installed:
         ```bash
         sudo apt-get update
@@ -34,11 +34,11 @@ We recommend following the [official Terraform installation guide from HashiCorp
         ```
     2.  Add the HashiCorp GPG key:
         ```bash
-        curl -fsSL [https://apt.releases.hashicorp.com/gpg](https://apt.releases.hashicorp.com/gpg) | sudo apt-key add -
+        curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
         ```
     3.  Add the official HashiCorp repository:
         ```bash
-        sudo apt-add-repository "deb [arch=amd64] [https://apt.releases.hashicorp.com](https://apt.releases.hashicorp.com) $(lsb_release -cs) main"
+        sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com jammy main"
         ```
     4.  Install Terraform:
         ```bash
@@ -50,7 +50,7 @@ We recommend following the [official Terraform installation guide from HashiCorp
         terraform -v
         ```
 
-* **Windows (using Chocolatey or Manually)**
+* **Windows (using Chocolatey or Manually)** *(Not tested - instructions provided for reference only)*
     * **With Chocolatey (recommended):**
         1.  Install [Chocolatey](https://chocolatey.org/install).
         2.  In a PowerShell terminal as Administrator, run:
@@ -66,7 +66,7 @@ We recommend following the [official Terraform installation guide from HashiCorp
             terraform -v
             ```
 
-* **macOS (using Homebrew or Manually)**
+* **macOS (using Homebrew or Manually)** *(Not tested - instructions provided for reference only)*
     * **With Homebrew (recommended):**
         1.  Install [Homebrew](https://brew.sh/) if you haven't already.
         2.  In a terminal, run:
