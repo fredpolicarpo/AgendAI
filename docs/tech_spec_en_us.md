@@ -58,7 +58,7 @@ graph TD
     N8N_AIAgent_Node -- Agent Response (Text/Tool Result) --> N8N_Workflow;
     N8N_Workflow -- Formatted Response --> TelegramAPI;
     TelegramAPI -- Text/Voice Response (pt-BR) --> UserInterface;
-
+```
 
 ### 3.2 Client Pre-Booking Request Flow (P1.3 Simplified - N8N AI Agent Node & Gemini Tool Use, with STT)
 
