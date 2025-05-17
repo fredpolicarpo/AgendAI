@@ -1,9 +1,9 @@
 # Technical Specification: AgendAI - P1 (MVP)
 
-**Version:** 1.5
-**Date:** May 17, 2025
-**Project:** AgendAI
-**Author:** Gemini (based on user interactions and PRD v1.6)
+ - **Version:** 1.5
+ - **Date:** May 17, 2025
+ - **Project:** AgendAI
+ - **Author:** Frederico Policarpo Martins Boaventura
 
 ## 1. Introduction
 
