@@ -1,85 +1,84 @@
-# Style Guide and Coding Conventions: AgendAI
+# Style Guide and Conventions: AgendAI (N8N Focus)
 
-**Version:** 1.0
+**Version:** 1.1
 
-You are an expert in Python, serverless development with Google Cloud Functions, conversation design with Dialogflow CX, and integration with Google Cloud APIs (Calendar, Sheets, Speech-to-Text, Gemini/Vertex AI).
+You are an expert in N8N workflow development, AI Agent node configuration (specifically with Gemini models via Vertex AI), and integration with Google Cloud APIs (Calendar, Sheets) as tools within N8N, as well as N8N STT node integration.
 
 **Key Principles**
-* Write concise, technical, and accurate code and documentation.
-* **Always prefer simple, elegant solutions** that are easy to understand and maintain.
-* Prioritize functional and modular programming; use classes (such as Pydantic models or for encapsulating services) when they add clarity and organization.
-* **Avoid code duplication (DRY - Don't Repeat Yourself)** by thoroughly checking for existing similar functionality within the codebase before writing new code. Utilize iteration and modularization (e.g., utility functions).
-* Use descriptive variable and function names, preferably in English for consistency with libraries and APIs, utilizing auxiliary verbs where appropriate (e.g., `is_active`, `has_permission`, `Workspace_calendar_events`).
-* Use `lowercase_with_underscores` for Python directory, file, and function names.
-* Adopt the RORO (Receive an Object, Return an Object) pattern for Google Cloud Functions handling Dialogflow webhooks (JSON input, JSON output).
-* Clearly document complex functions and business logic (docstrings, comments).
-* **Keep the codebase exceptionally clean, well-organized,** and adhere to the defined file structure.
+* Write concise, technical, and accurate descriptions for N8N configurations and prompts.
+* **Always prefer simple, elegant N8N workflow designs** that are easy to understand, debug, and maintain.
+* Prioritize modular N8N workflow design; use sub-workflows or linked workflows when they add clarity and reusability.
+* **Avoid duplication of logic within N8N workflows (DRY - Don't Repeat Yourself)** by thoroughly checking for existing similar node sequences or sub-workflows. Utilize iteration and modularization.
+* Use descriptive names for N8N workflows, nodes, and credentials. Use English for consistency where possible, especially for credential names and tool schemas.
+* Adopt a clear data flow pattern: ensure data passed between N8N nodes is structured and predictable (e.g., consistent JSON structures).
+* Clearly document complex N8N workflows, nodes with intricate configurations (especially AI Agent prompts and tool schemas), and non-obvious logic using N8N's note features or annotations.
+* **Keep N8N workflows exceptionally clean, well-organized,** and visually easy to follow.
 
-**Python (for Google Cloud Functions)**
-* Use `def` for synchronous functions and `async def` for asynchronous operations (especially external/Google API calls).
-* Utilize type hints for all function signatures and important variables.
-* Prefer Pydantic models for input/output data validation (e.g., Dialogflow webhook payloads, API responses) over raw dictionaries.
-* **File Structure (suggestion for Cloud Functions):**
-    * `main.py` (Cloud Function entry point, with HTTP/event handlers)
-    * `dialogflow_handler.py` (specific logic for processing and responding to Dialogflow webhooks)
-    * `services/` (modules for interacting with external APIs, e.g., `calendar_service.py`, `sheets_service.py`, `llm_service.py`)
-    * `models/` (Pydantic model definitions for payloads, configurations)
-    * `utils/` (generic utility functions, e.g., `date_utils.py`, `validation_utils.py`)
-    * `config.py` (for loading configurations and environment variables)
-* Avoid unnecessarily nested `if/else` blocks; use "early returns" and "guard clauses."
-* Keep functions small and focused on a single responsibility.
-* **Aim to keep Python files concise, ideally not exceeding 200-300 lines.** Refactor larger files into smaller, focused modules or functions.
+**N8N Workflow Design**
+* **Modularity:**
+    * Break down complex processes into smaller, manageable workflows or sub-workflows.
+    * Use "Execute Workflow" or "Merge" nodes strategically.
+* **Node Naming & Annotation:**
+    * Rename nodes from their defaults to reflect their specific function in the workflow (e.g., "Get Client Preferences AI Agent" instead of just "AI Agent").
+    * Use node colors and notes/annotations to explain complex sections or important configurations.
+* **Data Flow & Expressions:**
+    * Be explicit about data mapping. Use N8N expressions (`{{ $json.someValue }}`) effectively and ensure they are robust against missing data (e.g., using default value fallbacks or conditional logic).
+    * Minimize overly complex, deeply nested expressions in a single node; consider using a "Set" or "Function" node to prepare data if needed.
+    * Ensure consistent data structures are passed to and returned from key nodes like the AI Agent Node.
+* **Error Handling:**
+    * Utilize N8N's error handling capabilities:
+        * Configure "Error Workflow" triggers for critical workflows.
+        * Use node settings like "Continue on Fail" judiciously.
+        * Implement conditional logic (e.g., IF nodes) to check for errors or specific statuses from nodes (especially the AI Agent Node and STT Node) and route accordingly (e.g., send an error message to the user, retry, or log).
+* **Logging & Debugging:**
+    * Rely on N8N's execution logs for debugging. Understand how to inspect input/output data for each node.
+    * For critical steps, consider explicitly logging key information using a "Log to Console" (if self-hosting and accessible) or even a "Google Sheets Append" node for custom audit trails if necessary.
+* **Credentials:**
+    * Manage all credentials (Telegram Bot Token, Google Service Accounts for Vertex AI/STT, OAuth Client ID/Secret for Google tools) securely within N8N's built-in credential management system.
+    * Use descriptive names for credentials.
 
-**Google Cloud Functions Specific**
-* Each Cloud Function should have a clear purpose (e.g., `handle_dialogflow_webhook`, `process_stt_result`).
-* Robustly handle HTTP requests (especially from Dialogflow webhooks), validating the expected payload.
-* Utilize environment variables provided by Google Cloud Functions for storing API keys, project IDs, and other sensitive or environment-specific configurations. Use a `config.py` module to load and manage these variables within the application code.
-* Implement structured logging using the `google-cloud-logging` library for easier debugging and monitoring in Google Cloud.
-* Return appropriate HTTP responses to Dialogflow (e.g., `200 OK` with a JSON payload for fulfillment, or specific HTTP errors if processing fails critically).
+**N8N AI Agent Node Configuration (Gemini 1.5 Flash Focus)**
+* **Model Selection:** Clearly specify Gemini 1.5 Flash (or the targeted Gemini model).
+* **System Prompts:**
+    * Craft clear, concise, and effective system prompts that define the AI's role, persona (formal, polite, friendly, light enthusiasm for AgendAI), task, desired output format, and language (Brazilian Portuguese - pt-BR).
+    * Include placeholders for dynamic context from the workflow (e.g., `Professional ID: {{ $json.profId }}`).
+* **User Messages:** Pass clean user messages (original text or transcribed text from STT) to the AI Agent Node.
+* **Tool Definition & Schemas (Google Calendar, Google Sheets):**
+    * Define tool schemas accurately and comprehensively within the AI Agent Node's configuration. Schemas should clearly outline the function name, description, and parameters (name, type, description, required fields).
+    * Ensure parameter names in schemas are descriptive and easy for the LLM to understand and use.
+    * The AI Agent Node should be configured to use the correct professional-specific OAuth tokens when its tools interact with Google Calendar/Sheets (see Authentication section).
+* **Output Handling:**
+    * Anticipate the structure of the AI Agent Node's output (text response, tool call requests, tool call results).
+    * Design the N8N workflow to correctly parse this output and act accordingly (e.g., send text to user, execute functions if N8N needs to mediate tool calls though ideally Gemini uses tools directly, process tool results).
+* **Context Management:** For multi-turn conversations, ensure relevant history or context is passed back into the AI Agent Node in subsequent calls if needed to maintain coherence. This might involve the N8N workflow storing and retrieving conversation snippets.
 
-**Dialogflow CX Specific (Principles for Design and Fulfillment)**
-* **Clear Naming:** Use descriptive and consistent names for Intents, Entities, Pages, Flows, Transition Routes, and Parameters.
-* **Modularity:** Design modular and reusable conversational flows.
-* **Parameters:** Utilize parameters to collect and pass information between conversation states and to webhooks.
-* **Webhook Fulfillment:** For complex business logic, integration with external APIs, or generative AI, use webhooks.
-    * Webhook request and response JSON payloads should be well-defined and validated (Pydantic can assist on the Cloud Function side).
-* **Flow Control:** Effectively use conditions, routes, and event handlers within Dialogflow CX to guide the conversation.
-* **Dialog Error Handling:** Define routes to gracefully handle "no-match" and other errors, guiding the user.
+**N8N STT Node Configuration**
+* **Service Selection:** Specify the STT service/node being used (e.g., N8N's generic AI STT, Google Cloud STT node, Whisper node).
+* **Language Configuration:** Ensure the node is explicitly configured for **Brazilian Portuguese (pt-BR)**.
+* **Authentication:** Use N8N's credential system for any API keys or service accounts required by the STT node.
+* **Input/Output:** Understand how the node expects audio input (e.g., binary data, URL) and what format it outputs (e.g., JSON with transcription and confidence).
+* **Error Handling:** The workflow should handle cases where transcription fails or returns low confidence.
 
-**Google API Usage (Calendar, Sheets, Speech-to-Text, Gemini/Vertex AI)**
-* Utilize the official Google Cloud client libraries for Python (e.g., `google-api-python-client`, `google-cloud-aiplatform`, `google-cloud-speech`).
-* Implement asynchronous calls (`async/await`) for these APIs whenever possible to avoid blocking Cloud Function execution, especially for I/O-bound operations.
-* Correctly configure authentication and authorization (OAuth 2.0 for user data like Calendar/Sheets, API Keys/Service Accounts for APIs like STT/Vertex AI, as appropriate).
-* Implement robust error handling for API calls, including retries (with exponential backoff) for transient errors and specific parsing of API error codes.
-* Optimize API calls (e.g., use field masks to request only necessary data, consider batch operations when supported and appropriate).
+**Google API Usage (via N8N AI Agent Tools)**
+* While direct client library use is abstracted, understanding the underlying Google APIs (Calendar, Sheets) is crucial for defining effective tool schemas for the AI Agent Node.
+* **Authentication for Tools (OAuth 2.0 for User Data):**
+    * The core challenge is ensuring the AI Agent's tools use the *correct professional's* delegated credentials.
+    * The N8N workflow must securely retrieve the professional-specific OAuth tokens (obtained via a one-time consent flow).
+    * These tokens must then be made available to the AI Agent Node's tool execution mechanism for the specific API call. This might involve:
+        * N8N having a built-in mechanism for dynamic, per-execution credential injection into AI tool calls (ideal).
+        * Passing tokens as secure parameters if the AI Agent Node/tool connectors support it.
+        * Storing tokens in N8N's credential store, mapped to a professional ID, and referencing them dynamically.
+* **Scope Management:** Ensure the OAuth consent requests only the necessary scopes for Calendar and Sheets operations defined in the Product Specification.
+* **Data Structures:** Be mindful of the data structures expected by and returned from the Google APIs when designing tool schemas and processing their results.
 
-**Error Handling and Validation (in Cloud Functions)**
-* Prioritize error handling and edge cases:
-    * Validate incoming payloads (e.g., from Dialogflow) at the beginning of the function.
-    * Use "early returns" for error conditions to avoid excessive nesting.
-    * The "happy path" should be the main and final part of the function's logic.
-    * Utilize `try-except` blocks granularly to isolate operations that might fail (e.g., API calls, data manipulation).
-    * Log errors in detail.
-    * Return structured and helpful error messages to Dialogflow (which can then decide how to present them to the user or trigger an error flow).
-
-**Dependencies (Suggestions for `requirements.txt` for Cloud Functions)**
-* `functions-framework` (for local development and deployment to Google Cloud Functions)
-* `google-api-python-client`
-* `google-auth-oauthlib`
-* `google-cloud-logging`
-* `google-cloud-speech`
-* `google-cloud-aiplatform` (or `google-generativeai` for Gemini API directly)
-* `google-cloud-firestore` (if using Firestore for configurations)
-* `pydantic` (for data validation and serialization)
-* `python-dateutil` (for advanced date/time manipulation, if needed)
-* `pytz` (for robustly handling timezones)
-
-**Performance Optimization (for Cloud Functions)**
-* Minimize the impact of "cold starts" by keeping dependencies and the function's code size optimized.
-* Utilize asynchronous operations for all I/O-bound calls (APIs, database if any).
-* Consider caching strategies for frequently accessed, non-sensitive data that doesn't change constantly (e.g., using Google Cloud Functions' Cache or Redis/Memorystore if complexity warrants it), but be careful not to serve stale data (GCalendar is the source of truth for the schedule).
+**N8N Performance and Optimization**
+* **Workflow Efficiency:** Avoid unnecessary nodes or overly complex logic that could slow down executions.
+* **API Call Optimization (via Tool Design):** Design tool schemas that encourage efficient API use by Gemini (e.g., requesting only necessary fields if the API and tool schema support it).
+* **Minimize Data Transfer:** Only pass necessary data between nodes.
+* **Concurrency (if applicable):** Understand N8N's execution modes and how it handles concurrent workflow executions, especially if dealing with many users.
 
 **Development Philosophy and Practices**
-* **Environment Awareness:** Write code that gracefully handles differences between environments (dev, test, prod), primarily through configuration management (see Google Cloud Functions Specific).
-* **Scope of Changes:** Only make changes that are directly requested or are well-understood and demonstrably related to the requested change. Discuss broader refactoring efforts separately.
-*
+* **Environment Awareness:** If using different N8N instances for dev/test/prod, manage configurations (e.g., webhook URLs, specific credential usage) appropriately, possibly using N8N environment variables if available, or distinct workflow versions.
+* **Scope of Changes:** Only make changes that are directly requested or are well-understood and demonstrably related to the requested change.
+* **Iterative Development:** Build and test workflows incrementally. Test each node's configuration and output thoroughly.
+* **Version Control (Workflows):** N8N workflows are JSON. Consider versioning important workflows using Git or similar if making significant changes, or use N8N's built-in versioning if sufficient.
